@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Comparison Mock Up</title>
+    <script data-main="app" src="lib/require.js"></script>
+    <link href="style.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="lib/jquery-ui.css">
+    <link rel="stylesheet" href="lib/jquery-ui.structure.css">
+    <link rel="stylesheet" href="lib/jquery-ui.theme.css">
+    <link rel="stylesheet" href="lib/datatables.css">
+
+    <!-- for the one page layout -->
+    <style type="text/css">
+        section {
+            border-top: 1px solid #ccc;
+            padding: 150px 0 200px;
+        }
+
+        section:first-child {
+            border-top: none;
+            padding-top: 0;
+        }
+    </style>
+
+</head>
+<!-- SIDEMENU DIVIDER-->
+<div>
+    <div class="hdr">
+        <header>Comparison</header>
+    </div>
+    <button class="sidebarBtn">
+        <span></span>
+    </button>
+    <div id="divMenu" class="sidebar">
+
+        <div id="menuHeader" class="menuHeader">Filter by Course</div>
+        <div id="listDiv" class="listDiv">
+            <div id="courses" class="menuLabel">
+                <label>Courses</label>
+                <hr>
+                <label><input type="checkbox" name="SelectAll" class="selectAll" id="Select_All_Course"
+                              value="Select_All_Course"></label>Select All<br/>
+            </div>
+
+            <div id="terms" class="menuLabel">
+            </div>
+
+            <div id="sections" class="menuLabel">
+            </div>
+        </div>
+        <div id="dataDiv" class="dataDiv">
+            <div id="compareDataHdr" class="menuHeader">Select Data to Compare</div>
+            <div id="compareData" class="compareData">
+                <br/>
+                <label><input type="checkbox" name="data" id="#_of_Students" value="# of Students"></label># Students enrolled<br/>
+                <label><input type="checkbox" name="data" id="High_Score" value="High Score"></label>High Score<br/>
+                <label><input type="checkbox" name="data" id="Low_Score" value="Low Score"></label>Low Score<br/>
+                <label><input type="checkbox" name="data" id="Average" value="Average"></label>Average<br/>
+                <label><input type="checkbox" name="data" id="Median" value="Median"></label>Median<br/>
+                <label><input type="checkbox" name="data" id="Mode" value="Mode"></label>Mode<br/>
+                <label><input type="checkbox" name="data" id="#_Drop" value="# Drop"></label># Students dropped<br/>
+                <label><input type="checkbox" name="data" id="#_Incomplete" value="# Incomplete"></label># Students incomplete<br/>
+                <label><input type="checkbox" name="data" id="#_Satisf." value="# Satisf."></label># of Satisfactory<br/>
+                <label><input type="checkbox" name="data" id="#_Unsatisf." value="# Unsatisf."></label># of Unsatisfactory<br/>
+                <label><input type="checkbox" name="data" id="Activity_Index" value="Activity Index"></label>Activity Index<br/>
+                <label><input type="checkbox" name="data" id="Logins" value="Logins"></label>Logins<br/>
+                <label><input type="checkbox" name="data" id="Avg_Time" value="Avg Time"></label>Average Time in Course<br/>
+                <label><input type="checkbox" name="data" id="Avg_#_Page_Views" value="Avg # Page Views"></label>Average # Page Views<br/>
+                <label><input type="checkbox" name="data" id="Avg_#_File_Views" value="Avg # File Views"></label>Average # File Views<br/>
+
+                <br/>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="hdr">
+</div>
+
+
+<div id="charts">
+<!--    <h3>Charts</h3>-->
+    <div id="radiobuttons">
+        <!--    Radio buttons-->
+<!--        <label>Breakdown graphs by:</label>-->
+<!--        <br>-->
+        <label for="courseradio">Course</label><input type="radio" name="radio-1" id="courseradio">
+        <label for="termradio">Term</label><input type="radio" name="radio-1" id="termradio">
+        <label for="sectionradio">Section</label><input type="radio" name="radio-1" id="sectionradio">
+    </div>
+</div>
+
+<div id="uf-graphs-container" class="uf-graphs-container">
+
+</div>
+
+<div id="bodyMain" class="bodyMain">
+
+    <div id="main" class="main">
+        <table id="uf-datatable" class="display hover compact select">
+            <thead id="datatableHeaders">
+            <tr>
+                <th><label for="select-all">Include</label><input type="checkbox" name="select_all" value="1"
+                                                                  id="select-all"></th>
+                <th id="course">Course</th>
+                <th id="term">Term</th>
+                <th id="section">Section</th>
+                <th># of Students</th>
+                <th>High Score</th>
+                <th>Low Score</th>
+                <th>Average</th>
+                <th>Median</th>
+                <th>Mode</th>
+                <th># Satisf.</th>
+                <th># Unsatisf.</th>
+                <th># Drop</th>
+                <th># Incomplete</th>
+                <th>Act. Index</th>
+                <th>Logins</th>
+                <th>Avg Time</th>
+                <th>Avg Page Views</th>
+                <th>Avg File Views</th>
+                <th>Avg Subm.</th>
+                <th>Avg Convers.</th>
+                <th>Avg Discus.</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+</div>
+
+</body>
+</html>
