@@ -286,6 +286,16 @@ let courseData = [
 define(['jquery', 'datatable', 'plotly'], function($, dt, plotly) {
     $(document).ready(function() {
 
+        let termsChecked = 0;
+        let sectionsChecked = 0;
+        let rows = 0;
+        let yaxis = [];
+        let xaxis = [];
+        let maxYaxisValue = 500;
+        let sums = [4,10,11,12,13];
+        let avgs = [13,14,15,16,17,18,19,20,21,7];
+        let arr = [];
+
         // // // // // Radio buttons: // // // // // // //
 
         let courseRadio = $("#courseradio");
@@ -523,8 +533,8 @@ define(['jquery', 'datatable', 'plotly'], function($, dt, plotly) {
         });
 
         $(document).on('click', '#Select_All_Course', function() {
-            console.log($('#courses').children());
-            $('#courses').children();
+            // console.log($('#courses').children());
+            // $('#courses').children();
             searchCourses()
         });
 
@@ -572,7 +582,45 @@ define(['jquery', 'datatable', 'plotly'], function($, dt, plotly) {
             reloadGraphs();
         });
 
+
+        let studentsList = ["# Satisf.", "# Unsatisf.", "# Drop", "# Incomplete"];
+
+        let studentsDiv = document.createElement("div");
+        studentsDiv.id = "students_graph";
+        studentsDiv.name = 'uf-graphs';
+        $('#studentsGraph').append(studentsDiv);
+
+        barChart(studentsDiv, studentsList);
+
         let scoresList = ["High Score", "Low Score", "Average", "Median", "Mode"];
+
+        let scoresDiv = document.createElement("div");
+        scoresDiv.id = "scores_graph";
+        scoresDiv.name = 'uf-graphs';
+        $('#scoresGraph').append(scoresDiv);
+
+        barChart(scoresDiv, scoresList);
+
+        let activityList = ["Activity Index"];
+
+        let activityDiv = document.createElement("div");
+        activityDiv.id = "activity_graph";
+        activityDiv.name = 'uf-graphs';
+        $('#activityGraph').append(activityDiv);
+
+        barChart(activityDiv, activityList);
+
+        let averageList = ["Logins", "Avg # Page Views", "Avg # File Views", "Avg # Submissions", "Avg # Conversations", "Avg # Discussions"];
+
+        let averageDiv = document.createElement("div");
+        averageDiv.id = "average_graph";
+        averageDiv.name = 'uf-graphs';
+        $('#averageGraph').append(averageDiv);
+
+        barChart(averageDiv, averageList);
+        // relay(averageDiv);
+        addTrace(averageDiv, 16, "Avg Time");
+
 
         function reloadGraphs() {
             let children = $('#uf-graphs-container').children();
@@ -623,7 +671,7 @@ define(['jquery', 'datatable', 'plotly'], function($, dt, plotly) {
                         }
                     } else {
                         let div = document.getElementById("scores_graph");
-                        console.log("addTrace");
+                        // console.log("addTrace");
                         if(!currentTraces.includes(this.value)) {
                             if(addTrace(div, column, this.value)) {
                                 currentTraces.push(this.value);
@@ -634,7 +682,6 @@ define(['jquery', 'datatable', 'plotly'], function($, dt, plotly) {
                                     let idx = currentTraces.indexOf(this.value);
                                     currentTraces.splice(idx, 1);
                                 }
-
                             }
                         }
                     }
@@ -657,10 +704,10 @@ define(['jquery', 'datatable', 'plotly'], function($, dt, plotly) {
                 if(scoresList.includes(this.value)) {
                     if(currentTraces.length > 1) {
                         let idx = currentTraces.indexOf(this.value);
-                        console.log(idx);
+                        // console.log(idx);
                         plotly.deleteTraces("scores_graph", idx);
                         currentTraces.splice(idx, 1);
-                        console.log(currentTraces);
+                        // console.log(currentTraces);
                     } else {
                         document.getElementById("scores_graph").remove();
                         arr = [];
@@ -673,76 +720,120 @@ define(['jquery', 'datatable', 'plotly'], function($, dt, plotly) {
             }
         });
 
+        function maxVal() {
+            let values = [];
+            values.push(maxValue(16));
+            values.push(maxValue(17));
+            values.push(maxValue(18));
+            values.push(maxValue(19));
+            values.push(maxValue(20));
+            values.push(maxValue(21));
+
+            let max = Math.max(...values);
+            return max;
+        }
+
+        function maxValue(col) {
+            let values = [];
+            let data = table.column(col).data();
+            // console.log(data);
+            for(let i = 0; i < data.length; i++) {
+                values.push(data[i]);
+            }
+            // console.log(values);
+            let max = Math.max(...values);
+            return max;
+        }
+
         function addTrace(div, column, traceName) {
-
-            let y = getYaxis(column);
-
-            let trace = {
+            let trace2 = {
                 x: getXaxis(),
-                y: y,
+                y: getYaxis(column),
                 name: traceName,
-                title: ""
+                yaxis: 'y2'
             };
 
-            let data = [trace];
+            let data = [trace2];
 
-            if(!y.includes("N/A")) {
-                plotly.addTraces(div, data);
-                return true;
-            } else {
-                return false;
+            relay(div);
+            plotly.addTraces(div, data);
+        }
+
+        function relay(div) {
+
+            let yaxis2 = {
+                title: 'Avg Time',
+                overlaying: 'y',
+                side: 'right'
+            };
+
+            let update = {
+                yaxis2: yaxis2
+            };
+
+            plotly.relayout(div, update);
+        }
+
+        function barChart(div, list) {
+            let data = [];
+            let mode = "";
+            let title = "";
+            let yTitle = "";
+
+            if(div.id === 'scores_graph') {
+                mode = 'group';
+                maxYaxisValue = 110;
+            } else if (div.id === 'students_graph') {
+                yTitle = "# of Students";
+                mode = 'stack';
+                maxYaxisValue = maxValue(4) + 10;
+            } else if (div.id === 'activity_graph') {
+                yTitle = "Activity Index";
+                mode = 'bar';
+                maxYaxisValue = 1;
+            } else if (div.id === 'average_graph') {
+                mode = 'group';
+                maxYaxisValue = maxVal() + 10;
+                yTitle = 'Avg Count';
             }
+
+            for (let i = 0; i < list.length; i++) {
+                let trace = {
+                    x: getXaxis(),
+                    y: getYaxis(getColumn(list[i])),
+                    type: 'bar',
+                    name: list[i]
+                };
+                data.push(trace);
+            }
+
+            let layout = {
+                title: title,
+                legend: {
+                    orientation: "h",
+                    x: 0.05,
+                    y: 1.3
+                },
+                xaxis: {
+                    automargin: true
+                },
+                yaxis: {
+                    title: yTitle,
+                    overlaying: 'y',
+                    range: [0, maxYaxisValue],
+                    automargin: true
+
+                },
+                barmode: mode
+            };
+
+            plotly.newPlot(div, data, layout);
+
         }
 
         function drawGraph(div, column, title) {
 
-            let y = getYaxis(column);
-            let name = title;
-
-            if(scoresList.includes(title)) {
-                maxYaxisValue = 110;
-                title = "";
-            }
-
-            let trace = {
-                x: getXaxis(),
-                y: y,
-                type: 'bar',
-                name: name
-            };
-
-            let data = [trace] ;
-
-            let layout = {
-                title: title,
-                xaxis: {
-                    title: '',
-                    automargin: true
-                },
-                yaxis: {
-                    range: [0, maxYaxisValue],
-                    title: title,
-                    automargin: true
-                },
-            };
-
-            if(!y.includes("N/A")) {
-                plotly.newPlot(div, data, layout);
-                return true;
-            } else {
-                return false;
-            }
         }
-
-        let termsChecked = 0;
-        let sectionsChecked = 0;
-        let rows = 0;
-        let yaxis = [];
-        let xaxis = [];
-        let maxYaxisValue = 500;
-        let sums = [4,10,11,12,13];
-        let avgs = [13,14,15,16,17,18,19,20,21,7];
-        let arr = [];
 
         // // // // // Accesory methods: // // // // // // //
 
@@ -758,7 +849,7 @@ define(['jquery', 'datatable', 'plotly'], function($, dt, plotly) {
             } else {
                 yaxis = getCourseYaxis(column);
             }
-            maxYaxisValue = Math.max.apply(Math, yaxis) + 10;
+            // maxYaxisValue = Math.max.apply(Math, yaxis) + 10;
             // console.log(yaxis);
             return yaxis;
         }
@@ -796,7 +887,6 @@ define(['jquery', 'datatable', 'plotly'], function($, dt, plotly) {
                     }
                 }
             }
-            console.log(yaxis);
             return yaxis;
         }
 
@@ -821,7 +911,6 @@ define(['jquery', 'datatable', 'plotly'], function($, dt, plotly) {
                     xaxis.push(course);
                 }
             }
-            console.log(xaxis);
             return xaxis;
         }
 

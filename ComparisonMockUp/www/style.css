@@ -222,6 +222,15 @@ ul li {
     top: auto;
     padding: 0;
 }
+#scores_graph {
+    height: 400px;
+    width: 730px;
+}
+
+#students_graph {
+    height: 400px;
+    width: 730px;
+}
 
 
 
