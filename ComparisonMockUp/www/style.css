@@ -56,7 +56,7 @@ hr {
     left: 250px;
     background: transparent;
     width: 1500px;
-    height: 2000px;
+    height: 500px;
     border: none;
     outline: none;
     box-sizing: border-box;
@@ -69,6 +69,9 @@ th {
 }
 td {
     font-size: 12px;
+}
+tr {
+    width: 100%;
 }
 .menuHeader {
     color: #fff;
@@ -86,15 +89,6 @@ td {
     cursor: pointer;
     background: #014A83;
 }
-.compareData {
-    overflow: auto;
-    position: absolute;
-    top: 65px;
-    width: 225px;
-    padding-left: 25px;
-    background-color: #eee;
-    height: 80%;
-}
 .sbBtn {
     font-size: 16px;
     padding-left: 10px;
@@ -107,22 +101,7 @@ td {
     top: 50px;
     padding-top: 0;
     overflow: auto;
-    height: 45%;
-}
-.dataDiv {
-    position: absolute;
-    top: 50%;
-    width: 250px;
-    height: 45%;
-    background: #014A83;
-}
-ul {
-    margin: 0;
-    padding: 20px 0;
-}
-
-ul li {
-    list-style: none;
+    height: 100%;
 }
 .sidebar {
     position: fixed;
@@ -221,15 +200,6 @@ ul li {
     position: relative;
     top: auto;
     padding: 0;
-}
-#scores_graph {
-    height: 400px;
-    width: 730px;
-}
-
-#students_graph {
-    height: 400px;
-    width: 730px;
 }
 
 
