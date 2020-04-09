@@ -590,7 +590,7 @@ define(['jquery', 'datatable', 'plotly'], function($, dt, plotly) {
         studentsDiv.name = 'uf-graphs';
         $('#studentsGraph').append(studentsDiv);
 
-        barChart(studentsDiv, studentsList);
+        newChart(studentsDiv, studentsList);
 
         let scoresList = ["High Score", "Low Score", "Average", "Median", "Mode"];
 
@@ -599,7 +599,7 @@ define(['jquery', 'datatable', 'plotly'], function($, dt, plotly) {
         scoresDiv.name = 'uf-graphs';
         $('#scoresGraph').append(scoresDiv);
 
-        barChart(scoresDiv, scoresList);
+        newChart(scoresDiv, scoresList);
 
         let activityList = ["Activity Index"];
 
@@ -608,18 +608,23 @@ define(['jquery', 'datatable', 'plotly'], function($, dt, plotly) {
         activityDiv.name = 'uf-graphs';
         $('#activityGraph').append(activityDiv);
 
-        barChart(activityDiv, activityList);
+        newChart(activityDiv, activityList);
 
         let averageList = ["Logins", "Avg # Page Views", "Avg # File Views", "Avg # Submissions", "Avg # Conversations", "Avg # Discussions"];
+        let timeList = ["Avg Time"];
 
         let averageDiv = document.createElement("div");
         averageDiv.id = "average_graph";
         averageDiv.name = 'uf-graphs';
         $('#averageGraph').append(averageDiv);
 
-        barChart(averageDiv, averageList);
+        // chart(averageDiv);
+
+        multiChart(averageDiv, averageList, timeList);
+
+        // newChart(averageDiv, averageList);
         // relay(averageDiv);
-        addTrace(averageDiv, 16, "Avg Time");
+        // addTrace(averageDiv, 16, "Avg Time");
 
 
         function reloadGraphs() {
@@ -745,36 +750,7 @@ define(['jquery', 'datatable', 'plotly'], function($, dt, plotly) {
             return max;
         }
 
-        function addTrace(div, column, traceName) {
-            let trace2 = {
-                x: getXaxis(),
-                y: getYaxis(column),
-                name: traceName,
-                yaxis: 'y2'
-            };
-
-            let data = [trace2];
-
-            relay(div);
-            plotly.addTraces(div, data);
-        }
-
-        function relay(div) {
-
-            let yaxis2 = {
-                title: 'Avg Time',
-                overlaying: 'y',
-                side: 'right'
-            };
-
-            let update = {
-                yaxis2: yaxis2
-            };
-
-            plotly.relayout(div, update);
-        }
-
-        function barChart(div, list) {
+        function newChart(div, list) {
             let data = [];
             let mode = "";
             let title = "";
@@ -831,8 +807,58 @@ define(['jquery', 'datatable', 'plotly'], function($, dt, plotly) {
 
         }
 
-        function drawGraph(div, column, title) {
+        function multiChart(div, list, list2) {
+            let data = [];
 
+            let layout = {
+                title: "",
+                yaxis: {
+                    title: 'Average Count',
+                    titlefont: {color: '#1f77b4'},
+                    tickfont: {color: '#1f77b4'}
+                },
+                yaxis2: {
+                    title: 'Avg Time',
+                    titlefont: {color: '#e377c2'},
+                    tickfont: {color: '#e377c2'},
+                    autorange: false,
+                    range: [0, maxValue(16) + 5],
+                    anchor: 'free',
+                    overlaying: 'y',
+                    side: 'right',
+                    position: 1
+                },
+                legend: {
+                    orientation: "h",
+                    x: 0.05,
+                    y: 1.3
+                },
+            };
+
+            for (let i = 0; i < list.length; i++) {
+                let trace = {
+                    x: getXaxis(),
+                    y: getYaxis(getColumn(list[i])),
+                    type: 'bar',
+                    yaxis: 'y',
+                    name: list[i]
+                };
+
+                data.push(trace);
+            }
+
+            for (let i = 0; i < list2.length; i++) {
+                let trace2 = {
+                    x: getXaxis(),
+                    y: getYaxis(getColumn(list2[i])),
+                    type: 'scatter',
+                    yaxis: 'y2',
+                    name: list2[i]
+                };
+                data.push(trace2);
+            }
+
+            plotly.newPlot(div, data, layout);
         }
 
         // // // // // Accesory methods: // // // // // // //
