@@ -72,10 +72,10 @@ let termData = [
 let courseData = [
     ["",'AEB1234',"","",1156,902,92,104,58,98,67.5,68,69,73,0.169,'10:48:21',10.8,216,138,383,8,1,3],
     ["",'DCP3456',"","",3029,2363,242,273,151,91,69.8,63,74,46,0.54,'16:44:08',16.7,358,255,218,9,10,5],
-    ["",'MAC2130',"","",594,463,48,53,30,88,69.8,75,82,45,0.878,'13:38:26',13.6,453,434,306,9,0,4],
-    ["",'JOU1101',"","",3496,2727,280,315,175,91,50.4,54,1,18,0.342,'19:50:42',19.8,684,247,267,9,6,1],
-    ["",'GEB2001',"","",810,632,65,73,41,86,60,72,22,47,0.525,'19:59:47',20.0,153,313,261,19,17,11],
-    ["",'ISM6216',"","",1598,1246,128,144,80,88,58,98,86,28,0.983,'10:54:44',10.9,464,442,408,7,16,10]
+    ["",'MAC2130',"","",594,463,48,53,30,88,45,75,82,45,0.878,'13:38:26',13.6,453,434,306,9,0,4],
+    ["",'JOU1101',"","",3496,2727,280,315,175,91,50.4,54,80,75,0.342,'19:50:42',19.8,484,247,267,9,6,1],
+    ["",'GEB2001',"","",810,632,65,73,41,86,60,72,65,47,0.525,'19:59:47',20.0,153,313,261,19,17,11],
+    ["",'ISM6216',"","",1598,1246,128,144,90,88,52,88,86,28,0.983,'10:54:44',10.9,464,442,408,7,16,10]
 ];
 
 let studentsList = ["# Satisf.", "# Unsatisf.", "# Drop", "# Incomplete"];
@@ -98,12 +98,14 @@ define(['jquery', 'datatable', 'plotly'], function($, dt, plotly) {
         let radiobutton  = $('input:radio');
         let table = null;
 
+        let val = "Course";
+
         courseRadio.prop("checked", true);
 
         coursesMenu();
         createTable();
         drawTable(courseData);
-        loadGraphs(1,2,3,4);
+        loadGraphs();
 
         // // // // // Radio buttons: // // // // // // //
 
@@ -111,6 +113,7 @@ define(['jquery', 'datatable', 'plotly'], function($, dt, plotly) {
             $('#select-all').trigger('click');
 
             if(this.id === "courseradio") {
+                val = "Course";
                 termRadio.checked = false;
                 sectionRadio.checked = false;
 
@@ -123,6 +126,7 @@ define(['jquery', 'datatable', 'plotly'], function($, dt, plotly) {
                 tableData = courseData;
 
             } else if (this.id === "termradio") {
+                val = "Term";
                 courseRadio.checked = false;
                 sectionRadio.checked = false;
 
@@ -136,7 +140,7 @@ define(['jquery', 'datatable', 'plotly'], function($, dt, plotly) {
                 tableData = termData;
 
             } else if (this.id === "sectionradio") {
-
+                val = "Section";
                 termRadio.checked = false;
                 courseRadio.checked = false;
 
@@ -182,7 +186,6 @@ define(['jquery', 'datatable', 'plotly'], function($, dt, plotly) {
             });
 
             $( '#courses input[type="checkbox"]' ).prop('checked', true);
-
         }
 
         function termsMenu() {
@@ -211,7 +214,6 @@ define(['jquery', 'datatable', 'plotly'], function($, dt, plotly) {
                 $( '#terms input[type="checkbox"]' ).prop('checked', this.checked);
                 searchTerms();
             });
-
             $( '#terms input[type="checkbox"]' ).prop('checked', true);
         }
 
@@ -239,11 +241,9 @@ define(['jquery', 'datatable', 'plotly'], function($, dt, plotly) {
             $( '#sections .selectAll' ).click( function () {
                 $( '#sections input[type="checkbox"]' ).prop('checked', this.checked);
                 searchSections();
-
             });
 
             $( '#sections input[type="checkbox"]' ).prop('checked', true)
-
         }
 
         // // // // // DataTable: // // // // // // //
@@ -380,25 +380,22 @@ define(['jquery', 'datatable', 'plotly'], function($, dt, plotly) {
             if(courseRadio.is(':checked')) {
                 for(let i = 1; i < 4; i+=2) {
                     let j = i +1;
-
                     chartTable.append("<tr><td id=" + i + "><td id=" + j + ">");
                 }
             } else {
                 for(let i = 1; i < 5; i++) {
                     chartTable.append("<tr><td id=" + i + ">");
-
                     $('#' + i).css({ width: "1500px"});
                 }
-
             }
         }
 
-        function loadGraphs(td1, td2, td3, td4) {
+        function loadGraphs() {
 
             let studentsDiv = document.createElement("div");
             studentsDiv.id = "students_graph";
             studentsDiv.name = 'uf-graphs';
-            $('#' + td1).append(studentsDiv);
+            $('#1').append(studentsDiv);
 
             newChart(studentsDiv, studentsList);
             addTrace(studentsDiv, 4);
@@ -406,7 +403,7 @@ define(['jquery', 'datatable', 'plotly'], function($, dt, plotly) {
             let scoresDiv = document.createElement("div");
             scoresDiv.id = "scores_graph";
             scoresDiv.name = 'uf-graphs';
-            $('#' + td2).append(scoresDiv);
+            $('#2').append(scoresDiv);
 
             newChart(scoresDiv, scoresList);
 
@@ -415,14 +412,14 @@ define(['jquery', 'datatable', 'plotly'], function($, dt, plotly) {
             let activityDiv = document.createElement("div");
             activityDiv.id = "activity_graph";
             activityDiv.name = 'uf-graphs';
-            $('#' + td3).append(activityDiv);
+            $('#3').append(activityDiv);
 
             newChart(activityDiv, activityList);
 
             let averageDiv = document.createElement("div");
             averageDiv.id = "average_graph";
             averageDiv.name = 'uf-graphs';
-            $('#' + td4).append(averageDiv);
+            $('#4').append(averageDiv);
 
             multiChart(averageDiv, averageList, timeList);
         }
@@ -431,7 +428,21 @@ define(['jquery', 'datatable', 'plotly'], function($, dt, plotly) {
             $('#uf-table').empty();
 
             createTable();
-            loadGraphs(1,2,3,4);
+            loadGraphs();
+        }
+
+        function maxVal() {
+            let values = [];
+
+            values.push(maxValue(17));
+            values.push(maxValue(18));
+            values.push(maxValue(19));
+            values.push(maxValue(20));
+            values.push(maxValue(21));
+            values.push(maxValue(22));
+
+            let max = Math.max(...values);
+            return max;
         }
 
         function maxValue(col) {
@@ -455,17 +466,15 @@ define(['jquery', 'datatable', 'plotly'], function($, dt, plotly) {
                 title: "",
                 mode: 'markers',
                 marker: {
-                    symbol: 'line-ew-open',
-                    size: 48.5,
-                    color: '#e377c2',
+                    symbol: 'diamond-open',
+                    size: 10,
+                    color: '#000080',
                     line: {
                         width: 4
                     }
-                }
+                },
             };
-
             let data = [trace];
-
             plotly.addTraces(div, data);
         }
 
@@ -479,14 +488,18 @@ define(['jquery', 'datatable', 'plotly'], function($, dt, plotly) {
             if(div.id === 'scores_graph') {
                 mode = 'group';
                 maxYaxisValue = 110;
+                title = "Scores by " + val;
+                yTitle = "Score"
             } else if (div.id === 'students_graph') {
                 yTitle = "# of Students";
                 mode = 'stack';
-                maxYaxisValue = maxValue(4) + 10;
+                maxYaxisValue = maxValue(4) + 200;
+                title = "# of Students by " + val;
             } else if (div.id === 'activity_graph') {
                 yTitle = "Activity Index";
                 mode = 'bar';
                 maxYaxisValue = 1;
+                title = "Activity Index"
             }
 
             for (let i = 0; i < list.length; i++) {
@@ -504,7 +517,7 @@ define(['jquery', 'datatable', 'plotly'], function($, dt, plotly) {
                 legend: {
                     orientation: "h",
                     x: 0.05,
-                    y: 1.3
+                    y: 1.1
                 },
                 xaxis: {
                     automargin: true
@@ -514,30 +527,31 @@ define(['jquery', 'datatable', 'plotly'], function($, dt, plotly) {
                     overlaying: 'y',
                     range: [0, maxYaxisValue],
                     automargin: true
-
                 },
                 barmode: mode
             };
-
             plotly.newPlot(div, data, layout);
-
         }
 
         function multiChart(div, list, list2) {
             let data = [];
 
             let layout = {
-                title: "",
+                title: {
+                    text: "Average Activity by " + val,
+                    y: .95
+                },
                 xaxis: {
                     automargin: true
                 },
                 yaxis: {
                     title: 'Average Count',
+                    range: [0, maxVal() + 10]
                 },
                 yaxis2: {
                     title: 'Avg Time',
-                    titlefont: {color: '#e377c2'},
-                    tickfont: {color: '#e377c2'},
+                    titlefont: { color: '#000080' },
+                    tickfont: { color: '#000080' },
                     autorange: false,
                     range: [0, maxValue(16) + 5],
                     anchor: 'free',
@@ -548,7 +562,7 @@ define(['jquery', 'datatable', 'plotly'], function($, dt, plotly) {
                 legend: {
                     orientation: "h",
                     x: 0.05,
-                    y: 1.3
+                    y: 1.2
                 },
             };
 
@@ -560,7 +574,6 @@ define(['jquery', 'datatable', 'plotly'], function($, dt, plotly) {
                     yaxis: 'y',
                     name: list[i]
                 };
-
                 data.push(trace);
             }
 
@@ -570,11 +583,15 @@ define(['jquery', 'datatable', 'plotly'], function($, dt, plotly) {
                     y: getYaxis(getColumn(list2[i])),
                     type: 'scatter',
                     yaxis: 'y2',
-                    name: list2[i]
+                    name: list2[i],
+                    line: {
+                        color: '#000080',
+                        width: 2,
+                        dash: 'dashdot'
+                    }
                 };
                 data.push(trace2);
             }
-
             plotly.newPlot(div, data, layout);
         }
 
@@ -634,7 +651,6 @@ define(['jquery', 'datatable', 'plotly'], function($, dt, plotly) {
                         xaxis.push(course);
                     }
                 }
-
             }
             return xaxis;
         }
@@ -650,9 +666,7 @@ define(['jquery', 'datatable', 'plotly'], function($, dt, plotly) {
                     let section = table.columns(3, {search: 'applied'}).data()[0][row];
                     xaxis.push(course + " - " + term + " - " + section);
                 }
-
             }
-
             return xaxis;
         }
 
@@ -691,9 +705,7 @@ define(['jquery', 'datatable', 'plotly'], function($, dt, plotly) {
                         xaxis.push(course + " - " + term);
                     }
                 }
-
             }
-
             return xaxis;
         }
 
