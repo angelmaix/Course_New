@@ -83,7 +83,7 @@ let scoresList = ["High Score", "Low Score", "Average", "Median", "Mode"];
 let averageList = ["Logins", "Avg # Page Views", "Avg # File Views", "Avg # Submissions", "Avg # Conversations", "Avg # Discussions"];
 let timeList = ["Avg Time"];
 
-define(['jquery', 'datatables', 'plotly'], function($, dt, plotly) {
+define(['jquery', 'dataTables', 'plotly'], function($, dt, plotly) {
     $(document).ready(function() {
 
         let termsChecked = 0;
