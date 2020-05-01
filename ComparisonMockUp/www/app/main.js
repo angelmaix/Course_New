@@ -107,6 +107,19 @@ define(['jquery', 'dataTables', 'plotly'], function($, dt, plotly) {
         drawTable(courseData);
         loadGraphs();
 
+        // Automatically select all rows
+            $('#select-all').trigger('click');
+
+        // Automatically open the sidebar
+        setTimeout(function() {
+            $('.sidebarBtn').trigger('click');
+        },0);
+
+        $(".sidebarBtn").click(function () {
+            $(".sidebar").toggleClass("active");
+            $(".sidebarBtn").toggleClass("toggle");
+        });
+
         // // // // // Radio buttons: // // // // // // //
 
         radiobutton.on('change', function(){
@@ -186,7 +199,7 @@ define(['jquery', 'dataTables', 'plotly'], function($, dt, plotly) {
 
             $( '#courses .selectAll' ).on('click', function () {
                 $( '#courses input[type="checkbox"]' ).prop('checked', this.checked);
-                // $('#select-all').trigger('click');
+                $('#select-all').trigger('click');
             });
 
             $( '#courses input[type="checkbox"]' ).prop('checked', true);
@@ -295,6 +308,21 @@ define(['jquery', 'dataTables', 'plotly'], function($, dt, plotly) {
             });
         }
 
+        function createTable() {
+            let chartTable = $('#uf-table');
+            if(courseRadio.is(':checked')) {
+                for(let i = 1; i < 4; i+=2) {
+                    let j = i +1;
+                    chartTable.append("<tr><td id=" + i + "><td id=" + j + ">");
+                }
+            } else {
+                for(let i = 1; i < 5; i++) {
+                    chartTable.append("<tr><td id=" + i + ">");
+                    $('#' + i).css({ width: "1500px"});
+                }
+            }
+        }
+
         // Handle click on "Select all" control for the table
         $('#select-all').on('click', function(){
             let rowss = table.rows({ 'search': 'applied' }).nodes();
@@ -308,21 +336,6 @@ define(['jquery', 'dataTables', 'plotly'], function($, dt, plotly) {
                     el.indeterminate = true;
                 }
             }
-        });
-
-        // Automatically select all rows
-        setTimeout(function() {
-            $('#select-all').trigger('click');
-        },0);
-
-        // Automatically open the sidebar
-        setTimeout(function() {
-            $('.sidebarBtn').trigger('click');
-        },0);
-
-        $(".sidebarBtn").click(function () {
-            $(".sidebar").toggleClass("active");
-            $(".sidebarBtn").toggleClass("toggle");
         });
 
         // filter datatable by clicking checkboxes
@@ -379,20 +392,7 @@ define(['jquery', 'dataTables', 'plotly'], function($, dt, plotly) {
             reloadGraphs();
         });
 
-        function createTable() {
-            let chartTable = $('#uf-table');
-            if(courseRadio.is(':checked')) {
-                for(let i = 1; i < 4; i+=2) {
-                    let j = i +1;
-                    chartTable.append("<tr><td id=" + i + "><td id=" + j + ">");
-                }
-            } else {
-                for(let i = 1; i < 5; i++) {
-                    chartTable.append("<tr><td id=" + i + ">");
-                    $('#' + i).css({ width: "1500px"});
-                }
-            }
-        }
+
 
         function loadGraphs() {
 
